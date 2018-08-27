@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,26 +49,26 @@ public class RestaurantReviewController {
 		}
 	)
 	
-	/*@ApiOperation(value="Getting all Reviews", response=RestaurantReviewBean.class)
-	@GetMapping("/getReviews")
-	public ResponseEntity<List<RestaurantReviewBean>> getAllReviews(@PathVariable Integer restaurantId) {
-		beanList = service.getAllReviews(restaurantId);
+	@ApiOperation(value="Getting all Reviews in a list", response=RestaurantReviewBean.class)
+	@GetMapping("/getAllReviews")
+	public ResponseEntity<List<RestaurantReviewBean>> getAllReviews() {
+		beanList = service.getAllReviews();
 		return new ResponseEntity<List<RestaurantReviewBean>>(beanList, HttpStatus.OK);
-	}*/
+	}
 	
-	/*@ApiOperation(value="Getting all Reviews", response=RestaurantReviewBean.class)
-	@GetMapping("/getReviewsPaginated")
-	public ResponseEntity<Page<RestaurantReviewBean>> getAllReviewsPaginated(Pageable pageable) {
+	@ApiOperation(value="Getting all Reviews Paginated", response=RestaurantReviewBean.class)
+	@GetMapping("/getAllReviews/Paginated")
+	public Page<RestaurantReviewBean> getAllReviewsPaginated(Pageable pageable) {
 		beanPage = service.getAllReviewsPaginated(pageable);
-		return new ResponseEntity<Page<RestaurantReviewBean>>(HttpStatus.OK);
-	}*/
+		return beanPage;
+	}
 	
-	/*@ApiOperation(value="Getting Reviews of perticular Restaurant", response=RestaurantReviewBean.class)
-	@GetMapping("/getReviews")
+	@ApiOperation(value="Getting Reviews of perticular Restaurant in a list", response=RestaurantReviewBean.class)
+	@GetMapping("/getReviewsById/{restaurantId}")
 	public ResponseEntity<List<RestaurantReviewBean>> getReviews(@PathVariable Integer restaurantId) {
-		beanList = service.getAllReviews(restaurantId);
+		beanList = service.getReviews(restaurantId);
 		return new ResponseEntity<List<RestaurantReviewBean>>(beanList, HttpStatus.OK);
-	}*/
+	}
 	
 	@ApiOperation(value="Getting Reviews of perticular Restaurant Paginated", response=RestaurantReviewBean.class)
 	@RequestMapping(value="/getReviewsById/{restaurantId}/Paginated", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
@@ -79,10 +80,16 @@ public class RestaurantReviewController {
 //		return (Page<RestaurantReviewBean>) new ResponseEntity<Page<RestaurantReviewBean>>(beanPage, HttpStatus.OK);
 	}
 	
-	/*@PostMapping("/putReviews")
-	public ResponseEntity<RestaurantReviewBean> putReviews(@PathVariable RestaurantReviewBean bean) {
+	@RequestMapping(value="/putReview", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RestaurantReviewBean> putReviews(@RequestBody RestaurantReviewBean bean) {
 		bean = service.putReviews(bean);
 		return new ResponseEntity<RestaurantReviewBean>(bean, HttpStatus.OK);
-	}*/
+	}
+	
+	@RequestMapping(value="/updateReview", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RestaurantReviewBean> updateReviews(@RequestBody RestaurantReviewBean bean) {
+		bean = service.putReviews(bean);
+		return new ResponseEntity<RestaurantReviewBean>(bean, HttpStatus.OK);
+	}
 	
 }

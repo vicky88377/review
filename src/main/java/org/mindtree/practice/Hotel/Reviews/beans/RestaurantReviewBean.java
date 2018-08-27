@@ -2,8 +2,11 @@ package org.mindtree.practice.Hotel.Reviews.beans;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
+
 
 @Entity
+@Table(name="restaurant_review")
 public class RestaurantReviewBean {
 	
 	@Id

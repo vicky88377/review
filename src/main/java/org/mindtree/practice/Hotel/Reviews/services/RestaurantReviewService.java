@@ -20,7 +20,7 @@ public class RestaurantReviewService {
 	List<RestaurantReviewBean> beanList;
 	Page<RestaurantReviewBean> beanPage;
 	
-	/*public List<RestaurantReviewBean> getAllReviews(Integer restaurantId) {
+	public List<RestaurantReviewBean> getAllReviews() {
 //		bean = repository.findById(restaurantId).get();
 //		beanList = repository.findByReviewId(restaurantId);
 		beanList = repository.findAll();
@@ -36,25 +36,25 @@ public class RestaurantReviewService {
 	
 	public List<RestaurantReviewBean> getReviews(Integer restaurantId) {
 //		bean = repository.findById(restaurantId).get();
-		beanList = repository.findByReviewId(restaurantId);
+		beanList = repository.findByRestaurantId(restaurantId);
 		return beanList;
-	}*/
+	}
 	
 	public Page<RestaurantReviewBean> getReviewsPaginated(Pageable pageable, Integer restaurantId) throws InvalidRestaurantIdException {
 //		bean = repository.findById(restaurantId).get();
 //		beanPage = repository.findAll(pageable);
 //		beanList = (List<RestaurantReviewBean>) repository.findAll();
 		try {
-			beanPage = (Page<RestaurantReviewBean>) repository.findByReviewId(pageable, restaurantId);
+			beanPage = (Page<RestaurantReviewBean>) repository.findByRestaurantId(pageable, restaurantId);
 		}catch (Exception e) {
 			throw new InvalidRestaurantIdException();
 		}
 		return beanPage;
 	}
 	
-	/*public RestaurantReviewBean putReviews(RestaurantReviewBean bean) {
-		bean = repository.save(bean);
-		return bean;
-	}*/
+	public RestaurantReviewBean putReviews(RestaurantReviewBean bean) {
+		this.bean = repository.save(bean);
+		return this.bean;
+	}
 
 }

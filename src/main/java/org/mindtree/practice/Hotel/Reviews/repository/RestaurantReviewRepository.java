@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RestaurantReviewRepository extends JpaRepository<RestaurantReviewBean, Integer> {
-	List<RestaurantReviewBean> findByReviewId(Integer restaurantId);
-	Page<RestaurantReviewBean> findByReviewId(Pageable pageable, Integer restaurantId);
-	
+	List<RestaurantReviewBean> findByRestaurantId(Integer restaurantId);
+	Page<RestaurantReviewBean> findByRestaurantId(Pageable pageable, Integer restaurantId);
+//	Page<RestaurantReviewBean> findByReviewId(Pageable pageable, Integer restaurantId);	
 //	Page<RestaurantReviewBean> findByRestaurantReviewIdPaginated(Integer restaurantId);
 }
 

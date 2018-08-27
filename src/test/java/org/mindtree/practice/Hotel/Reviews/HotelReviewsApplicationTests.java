@@ -1,4 +1,4 @@
-package org.mindtree.practice.Hotel.Reviews;
+/*package org.mindtree.practice.Hotel.Reviews;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +32,7 @@ public class HotelReviewsApplicationTests {
 	@Test
 	public void testPositiveGetReviewsPaginated() {
 		Page<RestaurantReviewBean> page = new PageImplementation();
+		Response response = givenAuth().get
 		try {
 			pageable = new PaginationImplementation(page, 2);
 			beanPage = controller.getReviewsPaginated(1, pageable);
@@ -43,12 +44,13 @@ public class HotelReviewsApplicationTests {
 		Assert.notNull(beanPage, "Got Null in reviews wit pagination function");
 	}
 	
-	/*@Test
+	@Test
 	public void testNegativeGetReviewsPaginated() {
 		beanPage = service.getReviewsPaginated(pageable);
 		logger.info("size of pageable bean got : " + beanPage.getSize());
 		Assert.isInstanceOf(Page.class, beanPage, "Got Null in reviews with pagination function");
 		Assert.notNull(beanPage, "Got Null in reviews wit pagination function");
-	}*/
+	}
 
 }
+*/

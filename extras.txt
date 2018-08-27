@@ -1,0 +1,8 @@
+INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('10', '1', 'abc', '4', 'review 10');
+INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('11', '1', 'abc', '3', 'review 11');
+INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('12', '1', 'abc', '3', 'review 12');
+INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('13', '1', 'abc', '2', 'review 13');
+INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('14', '1', 'abc', '1', 'review 14');
+
+select * from restaurant_review_bean
+select * from restaurant_review

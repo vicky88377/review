@@ -6,4 +6,8 @@ INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer
 INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('6', '6', 'abc', '2', 'review 6');
 INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('7', '7', 'abc', '3', 'review 7');
 INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('8', '8', 'abc', '4', 'review 8');
-INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('9', '9', 'abc', '5', 'review 9');
+INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('9', '9', 'abc', '4', 'review 9');
+INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('10', '1', 'xyz', '5', 'review 10');
+INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('11', '1', 'pq', '5', 'review 11');
+INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('12', '1', 'klm', '5', 'review 12');
+INSERT INTO restaurant_review (review_id, restaurant_id, reviewer_name, reviewer_rating, restaurant_review) VALUES ('13', '1', 'lmn', '5', 'review 13');

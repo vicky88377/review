@@ -24,19 +24,19 @@ public class PageImplementation implements Page<RestaurantReviewBean> {
 	@Override
 	public int getNumber() {
 		// TODO Auto-generated method stub
-		return 0;
+		return pageNumber;
 	}
 
 	@Override
 	public int getNumberOfElements() {
 		// TODO Auto-generated method stub
-		return 0;
+		return bean.size();
 	}
 
 	@Override
 	public int getSize() {
 		// TODO Auto-generated method stub
-		return 0;
+		return bean.size();
 	}
 
 	@Override
