@@ -3,6 +3,7 @@ package org.mindtree.practice.Hotel.Reviews.services;
 import java.util.List;
 
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReviewBean;
+import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
 import org.mindtree.practice.Hotel.Reviews.repository.RestaurantReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public class RestaurantReviewService {
 	List<RestaurantReviewBean> beanList;
 	Page<RestaurantReviewBean> beanPage;
 	
-	public List<RestaurantReviewBean> getAllReviews(Integer restaurantId) {
+	/*public List<RestaurantReviewBean> getAllReviews(Integer restaurantId) {
 //		bean = repository.findById(restaurantId).get();
 //		beanList = repository.findByReviewId(restaurantId);
 		beanList = repository.findAll();
@@ -37,19 +38,23 @@ public class RestaurantReviewService {
 //		bean = repository.findById(restaurantId).get();
 		beanList = repository.findByReviewId(restaurantId);
 		return beanList;
-	}
+	}*/
 	
-	public Page<RestaurantReviewBean> getReviewsPaginated(Pageable pageable, Integer restaurantId) {
+	public Page<RestaurantReviewBean> getReviewsPaginated(Pageable pageable, Integer restaurantId) throws InvalidRestaurantIdException {
 //		bean = repository.findById(restaurantId).get();
 //		beanPage = repository.findAll(pageable);
 //		beanList = (List<RestaurantReviewBean>) repository.findAll();
-		beanPage = (Page<RestaurantReviewBean>) repository.findByReviewId(pageable, restaurantId);
+		try {
+			beanPage = (Page<RestaurantReviewBean>) repository.findByReviewId(pageable, restaurantId);
+		}catch (Exception e) {
+			throw new InvalidRestaurantIdException();
+		}
 		return beanPage;
 	}
 	
-	public RestaurantReviewBean putReviews(RestaurantReviewBean bean) {
+	/*public RestaurantReviewBean putReviews(RestaurantReviewBean bean) {
 		bean = repository.save(bean);
 		return bean;
-	}
+	}*/
 
 }
