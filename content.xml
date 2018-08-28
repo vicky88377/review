@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Resource name="jdbc/MysqlHikari" 
+    auth="Container"
+    factory="com.zaxxer.hikari.HikariJNDIFactory" 
+    type="javax.sql.DataSource"
+    maximumPoolSize="10" 
+    connectionTimeout="10000"
+    jdbcUrl="jdbc:mysql://127.0.0.1:3306/testdb?verifyServerCertificate=false&amp;useSSL=true"
+    driverClassName="com.mysql.cj.jdbc.Driver"
+    dataSource.implicitCachingEnabled="true"
+    dataSource.cachePrepStmts="true"
+    dataSource.prepStmtCacheSize="250"
+    dataSource.prepStmtCacheSqlLimit="2048"
+    dataSource.user="root"
+    dataSource.password="j2ee" />
