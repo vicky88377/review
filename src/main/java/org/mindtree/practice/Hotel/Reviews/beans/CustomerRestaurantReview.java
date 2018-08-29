@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="restaurant_review")
-public class RestaurantReviewBean {
+public class CustomerRestaurantReview {
 	
 	@Id
 	private int reviewId;
@@ -16,20 +16,8 @@ public class RestaurantReviewBean {
 	private String reviewerName;
 	private int reviewerRating;
 	private String restaurantReview;
+	private String eMailId;
 	
-	
-	public String getReviewerName() {
-		return reviewerName;
-	}
-	public void setReviewerName(String reviewerName) {
-		this.reviewerName = reviewerName;
-	}
-	public int getReviewerRating() {
-		return reviewerRating;
-	}
-	public void setReviewerRating(int reviewerRating) {
-		this.reviewerRating = reviewerRating;
-	}
 	public int getReviewId() {
 		return reviewId;
 	}
@@ -42,11 +30,29 @@ public class RestaurantReviewBean {
 	public void setRestaurantId(int restaurantId) {
 		this.restaurantId = restaurantId;
 	}
-	public String getReview() {
+	public String getReviewerName() {
+		return reviewerName;
+	}
+	public void setReviewerName(String reviewerName) {
+		this.reviewerName = reviewerName;
+	}
+	public int getReviewerRating() {
+		return reviewerRating;
+	}
+	public void setReviewerRating(int reviewerRating) {
+		this.reviewerRating = reviewerRating;
+	}
+	public String getRestaurantReview() {
 		return restaurantReview;
 	}
-	public void setReview(String review) {
-		this.restaurantReview = review;
+	public void setRestaurantReview(String restaurantReview) {
+		this.restaurantReview = restaurantReview;
 	}
-	
+	public String geteMailId() {
+		return eMailId;
+	}
+	public void seteMailId(String eMailId) {
+		this.eMailId = eMailId;
+	}
+		
 }

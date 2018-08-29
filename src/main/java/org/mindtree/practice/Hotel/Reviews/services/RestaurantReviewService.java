@@ -3,9 +3,9 @@ package org.mindtree.practice.Hotel.Reviews.services;
 import java.util.Iterator;
 import java.util.List;
 
+import org.mindtree.practice.Hotel.Reviews.beans.CustomerRestaurantReview;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReview;
-import org.mindtree.practice.Hotel.Reviews.beans.RestaurantBean;
-import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReviewBean;
+import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReviewUpdates;
 import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
 import org.mindtree.practice.Hotel.Reviews.repository.RestaurantReviewRepository;
 import org.slf4j.Logger;
@@ -25,63 +25,67 @@ public class RestaurantReviewService {
 	@Autowired
 	RestaurantReviewRepository repository;
 	
-	RestaurantReviewBean bean;
-	List<RestaurantReviewBean> beanList;
-	Page<RestaurantReviewBean> beanPage;
-	RestaurantReview cronReview;
-	List<RestaurantReview> reviewList;
-
-	private RestaurantBean restaurantBean;
+	CustomerRestaurantReview bean;
+	List<CustomerRestaurantReview> beanList;
+	Page<CustomerRestaurantReview> beanPage;
 	
-	public List<RestaurantReviewBean> getAllReviews() {
+	/*public List<CustomerRestaurantReview> getAllReviews() {
 //		bean = repository.findById(restaurantId).get();
 //		beanList = repository.findByReviewId(restaurantId);
 		beanList = repository.findAll();
 		return beanList;
 	}
 	
-	public Page<RestaurantReviewBean> getAllReviewsPaginated(Pageable pageable) {
+	public Page<CustomerRestaurantReview> getAllReviewsPaginated(Pageable pageable) {
 //		bean = repository.findById(restaurantId).get();
 //		beanList = (List<RestaurantReviewBean>) repository.findAll();
 		beanPage = repository.findAll(pageable);
 		return beanPage;
 	}
 	
-	public List<RestaurantReviewBean> getReviews(Integer restaurantId) {
+	public List<CustomerRestaurantReview> getReviews(Integer restaurantId) {
 //		bean = repository.findById(restaurantId).get();
 		beanList = repository.findByRestaurantId(restaurantId);
 		return beanList;
-	}
+	}*/
 	
-	public Page<RestaurantReviewBean> getReviewsPaginated(Pageable pageable, Integer restaurantId) throws InvalidRestaurantIdException {
+	public Page<CustomerRestaurantReview> getReviewsPaginated(Pageable pageable, Integer restaurantId) {
 //		bean = repository.findById(restaurantId).get();
 //		beanPage = repository.findAll(pageable);
 //		beanList = (List<RestaurantReviewBean>) repository.findAll();
-		try {
-			beanPage = (Page<RestaurantReviewBean>) repository.findByRestaurantId(pageable, restaurantId);
-		}catch (Exception e) {
-			throw new InvalidRestaurantIdException();
-		}
+		beanPage = (Page<CustomerRestaurantReview>) repository.findByRestaurantId(pageable, restaurantId);
 		return beanPage;
 	}
 	
-	public RestaurantReviewBean putReviews(RestaurantReviewBean bean) {
+	public CustomerRestaurantReview putReviews(CustomerRestaurantReview bean) {
 		this.bean = repository.save(bean);
 		return this.bean;
 	}
+	
+	public CustomerRestaurantReview updateReviews(RestaurantReviewUpdates updateBean, Integer reviewId) {
+		CustomerRestaurantReview updatedBean;
+		logger.info("reviewer ====================================== " + reviewId);
+		updatedBean = repository.findById(reviewId).get();
+		logger.info(updatedBean + "   reviewer update bean ====================================== " + reviewId);
+		updatedBean.setReviewerRating(updateBean.getRestaurantRating());
+		updatedBean.setRestaurantReview(updateBean.getRestaurantReview());
+		this.bean = repository.save(updatedBean);
+		logger.info("bean1 ====================================== " + this.bean);
+		return this.bean;
+	} 
 	
 	@Scheduled(initialDelay=5000, fixedDelay=200000)
 	public void cronJobAverageRating() {
 		logger.info("<-- cron job running");
 		RestTemplate template = new RestTemplate();
 		/*repository.doTheCronJob();*/
-		beanList = repository.doTheCronJob();
-		logger.info(beanList.toString());
-		Iterator<RestaurantReviewBean> iterator = beanList.iterator();
+		/*beanList = repository.runCronJob();
+		logger.info(beanList.toString());*/
+		Iterator<CustomerRestaurantReview> iterator = repository.runCronJob().iterator();
 		while(iterator.hasNext()) {
 			bean = iterator.next();
-//			restaurantBean = template.getForObject("review/" + cronReview.getRestaurantId() + "/" + cronReview.getAverage(), RestaurantBean.class);
-			logger.info("crone processing next object with review ID{}" + bean.getRestaurantId() + " " + bean.getReviewId() + " " + bean.getReviewerName() + " " + bean.getReviewerRating());
+//			restaurantBean = template.getForObject("review/" + bean.getRestaurantId() + "/" + bean.getReviewerRating(), RestaurantBean.class);
+			logger.info("crone processing next object with review ID{}" + bean.getRestaurantId() + " and average rating is " + bean.getReviewerRating());
 			/*repository.findByRestaurantId(croneReview.getRestaurantId());
 			bean.setRestaurantId(croneReview.getRestaurantId());
 			bean.setReviewerRating(croneReview.getAverage());

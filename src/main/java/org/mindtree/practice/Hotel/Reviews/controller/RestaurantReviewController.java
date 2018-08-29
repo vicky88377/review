@@ -5,7 +5,9 @@ import java.util.List;
 /*import javax.ws.rs.core.MediaType;*/
 
 import org.mindtree.practice.Hotel.Reviews.beans.ErrorDetails;
-import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReviewBean;
+import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReview;
+import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReviewUpdates;
+import org.mindtree.practice.Hotel.Reviews.beans.CustomerRestaurantReview;
 import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
 import org.mindtree.practice.Hotel.Reviews.services.RestaurantReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 /*import com.google.common.net.MediaType;*/
 
@@ -36,11 +39,13 @@ import io.swagger.annotations.ApiResponses;
 public class RestaurantReviewController {
 	
 	@Autowired
-	RestaurantReviewService service;
+	private RestaurantReviewService service;
 	
-	RestaurantReviewBean bean;
-	List<RestaurantReviewBean> beanList;
-	Page<RestaurantReviewBean> beanPage;
+	private CustomerRestaurantReview bean;
+	private RestTemplate template;
+	
+	private List<CustomerRestaurantReview> beanList;
+	private Page<CustomerRestaurantReview> beanPage;
 	
 	@ApiResponses(value= {
 			@ApiResponse(code=200, message="Successfully retrived"),
@@ -49,31 +54,31 @@ public class RestaurantReviewController {
 		}
 	)
 	
-	@ApiOperation(value="Getting all Reviews in a list", response=RestaurantReviewBean.class)
+	/*@ApiOperation(value="Getting all Reviews in a list", response=CustomerRestaurantReview.class)
 	@GetMapping("/getAllReviews")
-	public ResponseEntity<List<RestaurantReviewBean>> getAllReviews() {
+	public ResponseEntity<List<CustomerRestaurantReview>> getAllReviews() {
 		beanList = service.getAllReviews();
-		return new ResponseEntity<List<RestaurantReviewBean>>(beanList, HttpStatus.OK);
+		return new ResponseEntity<List<CustomerRestaurantReview>>(beanList, HttpStatus.OK);
 	}
 	
-	@ApiOperation(value="Getting all Reviews Paginated", response=RestaurantReviewBean.class)
+	@ApiOperation(value="Getting all Reviews Paginated", response=CustomerRestaurantReview.class)
 	@GetMapping("/getAllReviews/Paginated")
-	public Page<RestaurantReviewBean> getAllReviewsPaginated(Pageable pageable) {
+	public Page<CustomerRestaurantReview> getAllReviewsPaginated(Pageable pageable) {
 		beanPage = service.getAllReviewsPaginated(pageable);
 		return beanPage;
 	}
 	
-	@ApiOperation(value="Getting Reviews of perticular Restaurant in a list", response=RestaurantReviewBean.class)
+	@ApiOperation(value="Getting Reviews of perticular Restaurant in a list", response=CustomerRestaurantReview.class)
 	@GetMapping("/getReviewsById/{restaurantId}")
-	public ResponseEntity<List<RestaurantReviewBean>> getReviews(@PathVariable Integer restaurantId) {
+	public ResponseEntity<List<CustomerRestaurantReview>> getReviews(@PathVariable Integer restaurantId) {
 		beanList = service.getReviews(restaurantId);
-		return new ResponseEntity<List<RestaurantReviewBean>>(beanList, HttpStatus.OK);
-	}
+		return new ResponseEntity<List<CustomerRestaurantReview>>(beanList, HttpStatus.OK);
+	}*/
 	
-	@ApiOperation(value="Getting Reviews of perticular Restaurant Paginated", response=RestaurantReviewBean.class)
+	@ApiOperation(value="Getting Reviews of perticular Restaurant Paginated", response=CustomerRestaurantReview.class)
 	@RequestMapping(value="/getReviewsById/{restaurantId}/Paginated", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 //	@GetMapping("/getReviewsById/{restaurantId}/Paginated", produces=MediaType.)
-	public Page<RestaurantReviewBean> getReviewsPaginated(@PathVariable Integer restaurantId, Pageable pageable) throws IllegalArgumentException, InvalidRestaurantIdException {
+	public Page<CustomerRestaurantReview> getReviewsPaginated(@PathVariable Integer restaurantId, Pageable pageable) {
 		System.out.println(restaurantId + "integer restaurant id ===============================");
 		beanPage = service.getReviewsPaginated(pageable, restaurantId);
 		return beanPage;
@@ -81,15 +86,21 @@ public class RestaurantReviewController {
 	}
 	
 	@RequestMapping(value="/putReview", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RestaurantReviewBean> putReviews(@RequestBody RestaurantReviewBean bean) {
-		bean = service.putReviews(bean);
-		return new ResponseEntity<RestaurantReviewBean>(bean, HttpStatus.OK);
+	public ResponseEntity<CustomerRestaurantReview> putReviews(@RequestBody RestaurantReview bean) {
+		template = new RestTemplate();
+		this.bean = new CustomerRestaurantReview();
+//		String customerName = template.getForObject("/customer/" + customerEmailId, String.class);
+		this.bean.setRestaurantId(bean.getRestaurantId());
+		this.bean.setReviewerRating(bean.getRestaurantRating());
+		this.bean.setRestaurantReview(bean.getRestaurantReview());
+		this.bean = service.putReviews(this.bean);
+		return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/updateReview", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RestaurantReviewBean> updateReviews(@RequestBody RestaurantReviewBean bean) {
-		bean = service.putReviews(bean);
-		return new ResponseEntity<RestaurantReviewBean>(bean, HttpStatus.OK);
+	@RequestMapping(value="/updateReview/{reviewId}", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<CustomerRestaurantReview> updateReviews(@PathVariable Integer reviewId, @RequestBody RestaurantReviewUpdates bean) {
+		this.bean = service.updateReviews(bean, reviewId);
+		return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
 	}
 	
 }

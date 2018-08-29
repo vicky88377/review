@@ -4,19 +4,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 
-import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReviewBean;
+import org.mindtree.practice.Hotel.Reviews.beans.CustomerRestaurantReview;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-public class PageImplementation implements Page<RestaurantReviewBean> {
+public class PageImplementation implements Page<CustomerRestaurantReview> {
 
-	private List<RestaurantReviewBean> bean;
+	private List<CustomerRestaurantReview> bean;
 	private int pageNumber;
 	
 	
 	@Override
-	public List<RestaurantReviewBean> getContent() {
+	public List<CustomerRestaurantReview> getContent() {
 		// TODO Auto-generated method stub
 		return bean;
 	}
@@ -88,7 +88,7 @@ public class PageImplementation implements Page<RestaurantReviewBean> {
 	}
 
 	@Override
-	public Iterator<RestaurantReviewBean> iterator() {
+	public Iterator<CustomerRestaurantReview> iterator() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -106,7 +106,7 @@ public class PageImplementation implements Page<RestaurantReviewBean> {
 	}
 
 	@Override
-	public <U> Page<U> map(Function<? super RestaurantReviewBean, ? extends U> arg0) {
+	public <U> Page<U> map(Function<? super CustomerRestaurantReview, ? extends U> arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
