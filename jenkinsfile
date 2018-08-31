@@ -1,0 +1,40 @@
+pipeline
+              {
+                             agent any
+                                           stages
+                                           {
+                                                                        stage('compile-stage')
+                                                                        {
+                                                                          steps   
+                                                                          {           
+                                                                                      withMaven(maven:'Maven_3_3_9')
+                                                                                      {
+                                                                                                     sh 'mvn -f HotelReviews/pom.xml clean compile'
+                                                                                      }
+                                                                           }          
+                                                                        }             
+                                                                        stage('Testing-stage')
+                                                                        {
+                                                                          steps
+                                                                          {
+                                                                                      withMaven(maven:'Maven_3_3_9')
+                                                                                      {
+                                                                                                     sh 'mvn -f HotelReviews/pom.xml test'
+                                                                                      }
+                                                                           }          
+                                                                        } 
+                                                                        
+                                                          
+                                                                        stage('Build-stage')
+                                                                        {
+                                                                           steps
+                                                                           {
+                                                                                      withMaven(maven:'Maven_3_3_9')
+                                                                                      {
+                                                                                                     sh 'mvn -f HotelReviews/pom.xml package'
+                                                                                      }
+                                                                           } 
+                                                                        }  
+                             
+                                           } 
+              }                           
