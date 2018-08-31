@@ -14,7 +14,7 @@ public interface RestaurantReviewRepository extends JpaRepository<CustomerRestau
 	List<CustomerRestaurantReview> findByRestaurantId(Integer restaurantId);
 	Page<CustomerRestaurantReview> findByRestaurantId(Pageable pageable, Integer restaurantId);
 	
-	@Query(value="select restaurant_Id, review_id, reviewer_name, restaurant_review, avg(reviewer_rating) as reviewer_rating from customers.restaurant_review group by restaurant_id;", nativeQuery = true)
+	@Query(value="select restaurant_Id, review_id, reviewer_name, restaurant_review, e_mail_id, avg(reviewer_rating) as reviewer_rating from customers.restaurant_review group by restaurant_id;", nativeQuery = true)
 	List<CustomerRestaurantReview> runCronJob();
 	/*void doTheCronJob();*/
 	

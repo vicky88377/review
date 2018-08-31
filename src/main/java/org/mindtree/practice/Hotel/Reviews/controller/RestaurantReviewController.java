@@ -85,7 +85,7 @@ public class RestaurantReviewController {
 //		return (Page<RestaurantReviewBean>) new ResponseEntity<Page<RestaurantReviewBean>>(beanPage, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/putReview", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/putReview", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CustomerRestaurantReview> putReviews(@RequestBody RestaurantReview bean) {
 		template = new RestTemplate();
 		this.bean = new CustomerRestaurantReview();
@@ -97,7 +97,7 @@ public class RestaurantReviewController {
 		return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/updateReview/{reviewId}", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/updateReview/{reviewId}", method=RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CustomerRestaurantReview> updateReviews(@PathVariable Integer reviewId, @RequestBody RestaurantReviewUpdates bean) {
 		this.bean = service.updateReviews(bean, reviewId);
 		return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
