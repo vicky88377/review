@@ -4,11 +4,11 @@ import java.util.List;
 
 /*import javax.ws.rs.core.MediaType;*/
 
-import org.mindtree.practice.Hotel.Reviews.beans.ErrorDetails;
+//import org.mindtree.practice.Hotel.Reviews.beans.ErrorDetails;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReview;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReviewUpdates;
 import org.mindtree.practice.Hotel.Reviews.beans.CustomerRestaurantReview;
-import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
+//import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
 import org.mindtree.practice.Hotel.Reviews.services.RestaurantReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

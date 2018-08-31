@@ -1,4 +1,4 @@
-package org.mindtree.practice.Hotel.Reviews;
+/*package org.mindtree.practice.Hotel.Reviews;
 
 import java.util.Iterator;
 import java.util.List;
@@ -112,3 +112,4 @@ public class PageImplementation implements Page<CustomerRestaurantReview> {
 	}
 
 }
+*/

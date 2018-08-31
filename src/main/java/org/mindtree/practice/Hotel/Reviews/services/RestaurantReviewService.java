@@ -6,7 +6,7 @@ import java.util.List;
 import org.mindtree.practice.Hotel.Reviews.beans.CustomerRestaurantReview;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReview;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReviewUpdates;
-import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
+//import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
 import org.mindtree.practice.Hotel.Reviews.repository.RestaurantReviewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

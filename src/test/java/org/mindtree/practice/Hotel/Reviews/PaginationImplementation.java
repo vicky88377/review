@@ -1,4 +1,4 @@
-package org.mindtree.practice.Hotel.Reviews;
+/*package org.mindtree.practice.Hotel.Reviews;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -91,3 +91,4 @@ public class PaginationImplementation implements Pageable {
 	}
 
 }
+*/

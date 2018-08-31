@@ -1,4 +1,4 @@
-package org.mindtree.practice.Hotel.Reviews.beans;
+/*package org.mindtree.practice.Hotel.Reviews.beans;
 
 import java.math.BigInteger;
 
@@ -24,3 +24,4 @@ public class ErrorDetails {
 	}
 	
 }
+*/

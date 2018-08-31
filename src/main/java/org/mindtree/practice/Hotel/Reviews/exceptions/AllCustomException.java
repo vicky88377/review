@@ -1,4 +1,4 @@
-package org.mindtree.practice.Hotel.Reviews.exceptions;
+/*package org.mindtree.practice.Hotel.Reviews.exceptions;
 
 import org.mindtree.practice.Hotel.Reviews.beans.ErrorDetails;
 import org.springframework.http.HttpStatus;
@@ -24,3 +24,4 @@ public class AllCustomException extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<ErrorDetails>(new ErrorDetails(exception.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
+*/

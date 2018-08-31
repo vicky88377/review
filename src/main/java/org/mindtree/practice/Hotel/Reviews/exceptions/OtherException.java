@@ -1,10 +1,10 @@
-package org.mindtree.practice.Hotel.Reviews.exceptions;
+/*package org.mindtree.practice.Hotel.Reviews.exceptions;
 
 public class OtherException extends Exception {
 
-	/**
+	*//**
 	 * 
-	 */
+	 *//*
 	private static final long serialVersionUID = 1L;
 	
 	public OtherException() {
@@ -32,3 +32,4 @@ public class OtherException extends Exception {
 	}
 
 }
+*/

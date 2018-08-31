@@ -15,11 +15,14 @@ import org.mindtree.practice.Hotel.Reviews.beans.CustomerRestaurantReview;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReview;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReviewUpdates;
 import org.mindtree.practice.Hotel.Reviews.controller.RestaurantReviewController;
-import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
+import org.mindtree.practice.Hotel.Reviews.services.RestaurantReviewService;
+import org.mockito.Mockito;
+//import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +48,9 @@ public class HotelReviewsApplicationTests {
 	private CustomerRestaurantReview expectedCustomerRestaurantReview;
 	private List<CustomerRestaurantReview> expectedCustomerRestaurantReviewList;
 	private Iterator iterator;
+	
+	/*@MockBean
+	private RestaurantReviewService service;*/
 	
 	@Autowired
 	private RestaurantReviewController controller;
@@ -132,6 +138,12 @@ public class HotelReviewsApplicationTests {
 		logger.info("size of pageable bean got : " + beanPage.getSize());
 		Assert.isInstanceOf(Page.class, beanPage, "Got Null in reviews with pagination function");
 		Assert.notNull(beanPage, "Got Null in reviews wit pagination function");
+	}*/
+	
+	/*@Test
+	public void testCronJob() {
+		Mockito.doReturn(null).when(service).cronJobAverageRating();
+		assertEquals(null, null);
 	}*/
 	
 	@Test
