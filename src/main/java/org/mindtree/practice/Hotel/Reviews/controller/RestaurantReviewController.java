@@ -94,10 +94,10 @@ public class RestaurantReviewController {
 		template = new RestTemplate();
 		this.bean = new CustomerRestaurantReview();
 //		String customerName = template.getForObject("/customer/" + customerEmailId, String.class);
-		/*this.bean.setRestaurantId(bean.getRestaurantId());
+		this.bean.setRestaurantId(bean.getRestaurantId());
 		this.bean.setReviewerRating(bean.getRestaurantRating());
 		this.bean.setRestaurantReview(bean.getRestaurantReview());
-		this.bean = service.putReviews(this.bean);*/
+		
 		this.bean.seteMailId("shetashree1993@gmail.com");
 		Map<String, String> userInfo;
 		try {
@@ -107,10 +107,10 @@ public class RestaurantReviewController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/{resId}/reviews/{rating}
+//		http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/{resId}/reviews/{rating}
 //		String customerName = template.getForObject("https://172.23.22.1:9002/customers/customerName/" + this.bean.geteMailId(), String.class);
 		this.bean.setReviewerName(template.getForObject("https://172.23.22.1:9002/customers/customerName/" + this.bean.geteMailId(), String.class));
-		
+		this.bean = service.putReviews(this.bean);
 		return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
 	}
 	

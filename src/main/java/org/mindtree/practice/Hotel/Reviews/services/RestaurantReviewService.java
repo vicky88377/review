@@ -94,7 +94,7 @@ public class RestaurantReviewService {
 		Iterator<CustomerRestaurantReview> iterator = repository.runCronJob().iterator();
 		while(iterator.hasNext()) {
 			bean = iterator.next();
-			RestaurantBean restaurantBean = template.getForObject("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), RestaurantBean.class);
+//			RestaurantBean restaurantBean = template.getForObject("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), RestaurantBean.class);
 			logger.info("crone processing next object with review ID{}" + bean.getRestaurantId() + " and average rating is " + bean.getReviewerRating());
 			/*repository.findByRestaurantId(croneReview.getRestaurantId());
 			bean.setRestaurantId(croneReview.getRestaurantId());
