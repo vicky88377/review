@@ -1,9 +1,12 @@
 package org.mindtree.practice.Hotel.Reviews.services;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.mindtree.practice.Hotel.Reviews.beans.CustomerRestaurantReview;
+import org.mindtree.practice.Hotel.Reviews.beans.RestaurantBean;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReview;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReviewUpdates;
 //import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
@@ -17,6 +20,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
+import com.google.firebase.tasks.Task;
+
 @Service
 public class RestaurantReviewService {
 	
@@ -27,7 +34,7 @@ public class RestaurantReviewService {
 	
 	CustomerRestaurantReview bean;
 	List<CustomerRestaurantReview> beanList;
-	Page<CustomerRestaurantReview> beanPage;
+	Page<CustomerRestaurantReview> beanPage;	
 	
 	/*public List<CustomerRestaurantReview> getAllReviews() {
 //		bean = repository.findById(restaurantId).get();
@@ -63,6 +70,9 @@ public class RestaurantReviewService {
 	}
 	
 	public CustomerRestaurantReview updateReviews(RestaurantReviewUpdates updateBean, Integer reviewId) {
+		/*if(isValidToken(firebaseAccessToken)) {
+			
+		}*/
 		CustomerRestaurantReview updatedBean;
 		logger.info("reviewer ====================================== " + reviewId);
 		updatedBean = repository.findById(reviewId).get();
@@ -84,7 +94,7 @@ public class RestaurantReviewService {
 		Iterator<CustomerRestaurantReview> iterator = repository.runCronJob().iterator();
 		while(iterator.hasNext()) {
 			bean = iterator.next();
-//			restaurantBean = template.getForObject("review/" + bean.getRestaurantId() + "/" + bean.getReviewerRating(), RestaurantBean.class);
+			RestaurantBean restaurantBean = template.getForObject("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), RestaurantBean.class);
 			logger.info("crone processing next object with review ID{}" + bean.getRestaurantId() + " and average rating is " + bean.getReviewerRating());
 			/*repository.findByRestaurantId(croneReview.getRestaurantId());
 			bean.setRestaurantId(croneReview.getRestaurantId());

@@ -1,6 +1,7 @@
 package org.mindtree.practice.Hotel.Reviews.controller;
 
 import java.util.List;
+import java.util.Map;
 
 /*import javax.ws.rs.core.MediaType;*/
 
@@ -20,10 +21,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import org.mindtree.practice.Hotel.Reviews.firebase.FireBaseAuthHelper;
 
 /*import com.google.common.net.MediaType;*/
 
@@ -86,14 +90,27 @@ public class RestaurantReviewController {
 	}
 	
 	@RequestMapping(value="/putReview", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CustomerRestaurantReview> putReviews(@RequestBody RestaurantReview bean) {
+	public ResponseEntity<CustomerRestaurantReview> putReviews(@RequestHeader(value="token") String firebaseAccessToken, @RequestBody RestaurantReview bean) {
 		template = new RestTemplate();
 		this.bean = new CustomerRestaurantReview();
 //		String customerName = template.getForObject("/customer/" + customerEmailId, String.class);
-		this.bean.setRestaurantId(bean.getRestaurantId());
+		/*this.bean.setRestaurantId(bean.getRestaurantId());
 		this.bean.setReviewerRating(bean.getRestaurantRating());
 		this.bean.setRestaurantReview(bean.getRestaurantReview());
-		this.bean = service.putReviews(this.bean);
+		this.bean = service.putReviews(this.bean);*/
+		this.bean.seteMailId("shetashree1993@gmail.com");
+		Map<String, String> userInfo;
+		try {
+			userInfo = FireBaseAuthHelper.getUserInfo(firebaseAccessToken);
+			this.bean.seteMailId(userInfo.get("email"));
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/{resId}/reviews/{rating}
+//		String customerName = template.getForObject("https://172.23.22.1:9002/customers/customerName/" + this.bean.geteMailId(), String.class);
+		this.bean.setReviewerName(template.getForObject("https://172.23.22.1:9002/customers/customerName/" + this.bean.geteMailId(), String.class));
+		
 		return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
 	}
 	
