@@ -16,6 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -86,17 +90,20 @@ public class RestaurantReviewService {
 	
 	@Scheduled(initialDelay=5000, fixedDelay=200000)
 	public void cronJobAverageRating() {
-		logger.info("<-- cron job running");
+		logger.info("--> cron job running");
 		RestTemplate template = new RestTemplate();
+		RestaurantBean restaurantBean;
 		/*repository.doTheCronJob();*/
 		/*beanList = repository.runCronJob();
 		logger.info(beanList.toString());*/
 		Iterator<CustomerRestaurantReview> iterator = repository.runCronJob().iterator();
 		while(iterator.hasNext()) {
 			bean = iterator.next();
-//			RestaurantBean restaurantBean = template.getForObject("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), RestaurantBean.class);
-			logger.info("crone processing next object with review ID{}" + bean.getRestaurantId() + " and average rating is " + bean.getReviewerRating());
-			/*repository.findByRestaurantId(croneReview.getRestaurantId());
+//			template.exchange("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/" + bean.getRestaurantId() + "/reviews/" + bean.getRestaurantReview(), HttpMethod.PUT, null, RestaurantBean.class);
+			ResponseEntity<RestaurantBean> restaurantEntityBean = template.exchange("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), HttpMethod.PUT, new HttpEntity<String>(new HttpHeaders()), RestaurantBean.class);
+			logger.info("cron log : Restaurant ID " + bean.getRestaurantId() + " and average rating is " + bean.getReviewerRating() + " result status : " + restaurantEntityBean.getBody().getStatus() + " and status code : " + restaurantEntityBean.getBody().getStatus_code());
+			/*RestaurantBean restaurantBean = template.getForObject("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), RestaurantBean.class);
+			repository.findByRestaurantId(croneReview.getRestaurantId());
 			bean.setRestaurantId(croneReview.getRestaurantId());
 			bean.setReviewerRating(croneReview.getAverage());
 			repository.save(bean);*/

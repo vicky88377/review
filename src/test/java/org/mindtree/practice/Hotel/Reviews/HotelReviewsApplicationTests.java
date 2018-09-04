@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -147,7 +148,7 @@ public class HotelReviewsApplicationTests {
 	}*/
 	
 	@Test
-	public void testCreateReviews() {
+	public void testCreateReviews() throws ExecutionException {
 		expectedCustomerRestaurantReview = new CustomerRestaurantReview();
 		expectedCustomerRestaurantReview.setReviewId(1);
 		expectedCustomerRestaurantReview.setRestaurantId(1);

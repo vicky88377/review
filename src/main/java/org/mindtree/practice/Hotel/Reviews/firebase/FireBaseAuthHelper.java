@@ -3,6 +3,7 @@ package org.mindtree.practice.Hotel.Reviews.firebase;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.core.io.ClassPathResource;
 
@@ -31,13 +32,12 @@ public class FireBaseAuthHelper {
 				FirebaseApp.initializeApp(options);		
 	}
 	
-	public static Map<String,String> getUserInfo( String firebaseAccessToken ) throws InterruptedException {
+	public static Map<String,String> getUserInfo1( String firebaseAccessToken ) throws InterruptedException, ExecutionException {
 		
 		Map userMap = new HashMap();
-		Task<FirebaseToken> decodedToken = FirebaseAuth.getInstance().verifyIdToken(firebaseAccessToken);
-		Thread.sleep(5000l);
-		userMap.put("email", decodedToken.getResult().getEmail());
-		userMap.put("name", decodedToken.getResult().getName());
+		FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdTokenAsync(firebaseAccessToken).get();
+		userMap.put("email", decodedToken.getEmail());
+		userMap.put("name", decodedToken.getName());
 
 		return userMap;
 	}
@@ -45,7 +45,7 @@ public class FireBaseAuthHelper {
 	public static boolean isValidToken( String firebaseAccessToken ) {
 			
 		try {
-	 		Task<FirebaseToken> decodedToken = FirebaseAuth.getInstance().verifyIdToken(firebaseAccessToken);
+			FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdTokenAsync(firebaseAccessToken).get();
 		}catch(Exception exec) {
 			System.out.println("====invalid token====");
 

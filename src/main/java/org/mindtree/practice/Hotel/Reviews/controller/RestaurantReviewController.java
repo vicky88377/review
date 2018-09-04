@@ -2,18 +2,23 @@ package org.mindtree.practice.Hotel.Reviews.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /*import javax.ws.rs.core.MediaType;*/
 
 //import org.mindtree.practice.Hotel.Reviews.beans.ErrorDetails;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReview;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantReviewUpdates;
+import org.mindtree.practice.Hotel.Reviews.beans.CustomerInfo;
 import org.mindtree.practice.Hotel.Reviews.beans.CustomerRestaurantReview;
 //import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
 import org.mindtree.practice.Hotel.Reviews.services.RestaurantReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -90,7 +95,7 @@ public class RestaurantReviewController {
 	}
 	
 	@RequestMapping(value="/putReview", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CustomerRestaurantReview> putReviews(@RequestHeader(value="token") String firebaseAccessToken, @RequestBody RestaurantReview bean) {
+	public ResponseEntity<CustomerRestaurantReview> putReviews(@RequestHeader(value="token") String firebaseAccessToken, @RequestBody RestaurantReview bean) throws ExecutionException {
 		template = new RestTemplate();
 		this.bean = new CustomerRestaurantReview();
 //		String customerName = template.getForObject("/customer/" + customerEmailId, String.class);
@@ -101,16 +106,21 @@ public class RestaurantReviewController {
 		this.bean.seteMailId("shetashree1993@gmail.com");
 		Map<String, String> userInfo;
 		try {
-			userInfo = FireBaseAuthHelper.getUserInfo(firebaseAccessToken);
+			userInfo = FireBaseAuthHelper.getUserInfo1(firebaseAccessToken);
 			this.bean.seteMailId(userInfo.get("email"));
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("token", firebaseAccessToken);
+			HttpEntity<String> entity = new HttpEntity<String>(headers);
+			ResponseEntity<CustomerInfo> responseEntity = template.exchange("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/customers/customerDetails", HttpMethod.GET, entity, CustomerInfo.class);
+			this.bean.seteMailId(responseEntity.getBody().getEmail_id());
+			this.bean.setReviewerName(responseEntity.getBody().getCustomer_name());
+			this.bean = service.putReviews(this.bean);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 //		http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/{resId}/reviews/{rating}
 //		String customerName = template.getForObject("https://172.23.22.1:9002/customers/customerName/" + this.bean.geteMailId(), String.class);
-		this.bean.setReviewerName(template.getForObject("https://172.23.22.1:9002/customers/customerName/" + this.bean.geteMailId(), String.class));
-		this.bean = service.putReviews(this.bean);
 		return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
 	}
 	
