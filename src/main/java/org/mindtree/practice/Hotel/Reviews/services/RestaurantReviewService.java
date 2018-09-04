@@ -1,9 +1,12 @@
 package org.mindtree.practice.Hotel.Reviews.services;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.mindtree.practice.Hotel.Reviews.beans.CustomerRestaurantReview;
 import org.mindtree.practice.Hotel.Reviews.beans.RestaurantBean;
@@ -34,11 +37,12 @@ public class RestaurantReviewService {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	RestaurantReviewRepository repository;
+	private RestaurantReviewRepository repository;
 	
-	CustomerRestaurantReview bean;
-	List<CustomerRestaurantReview> beanList;
-	Page<CustomerRestaurantReview> beanPage;	
+	private CustomerRestaurantReview bean;
+	private List<CustomerRestaurantReview> beanList;
+	private Page<CustomerRestaurantReview> beanPage;
+	private Properties reviewFile;
 	
 	/*public List<CustomerRestaurantReview> getAllReviews() {
 //		bean = repository.findById(restaurantId).get();
@@ -69,6 +73,7 @@ public class RestaurantReviewService {
 	}
 	
 	public CustomerRestaurantReview putReviews(CustomerRestaurantReview bean) {
+		logger.info("Review created with restaurantID " + bean.getRestaurantId());
 		this.bean = repository.save(bean);
 		return this.bean;
 	}
@@ -88,35 +93,42 @@ public class RestaurantReviewService {
 		return this.bean;
 	} 
 	
-	@Scheduled(initialDelay=5000, fixedDelay=200000)
+	/*@Scheduled(initialDelay=5000, fixedDelay=200000)
 	public void cronJobAverageRating() {
 		logger.info("--> cron job running");
 		RestTemplate template = new RestTemplate();
 		RestaurantBean restaurantBean;
-		/*repository.doTheCronJob();*/
-		/*beanList = repository.runCronJob();
-		logger.info(beanList.toString());*/
+		repository.doTheCronJob();
+		beanList = repository.runCronJob();
+		logger.info(beanList.toString());
+		try {
+			reviewFile = new Properties();
+			reviewFile.load(new FileInputStream("reviewConfig.properties"));
+			logger.info("--> " + reviewFile.getProperty("restauranturl1"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Iterator<CustomerRestaurantReview> iterator = repository.runCronJob().iterator();
 		while(iterator.hasNext()) {
 			bean = iterator.next();
 //			template.exchange("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/" + bean.getRestaurantId() + "/reviews/" + bean.getRestaurantReview(), HttpMethod.PUT, null, RestaurantBean.class);
-			ResponseEntity<RestaurantBean> restaurantEntityBean = template.exchange("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), HttpMethod.PUT, new HttpEntity<String>(new HttpHeaders()), RestaurantBean.class);
+			ResponseEntity<RestaurantBean> restaurantEntityBean = template.exchange(reviewFile.getProperty("restauranturl1") + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), HttpMethod.PUT, new HttpEntity<String>(new HttpHeaders()), RestaurantBean.class);
 			logger.info("cron log : Restaurant ID " + bean.getRestaurantId() + " and average rating is " + bean.getReviewerRating() + " result status : " + restaurantEntityBean.getBody().getStatus() + " and status code : " + restaurantEntityBean.getBody().getStatus_code());
-			/*RestaurantBean restaurantBean = template.getForObject("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), RestaurantBean.class);
+			RestaurantBean restaurantBean = template.getForObject("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), RestaurantBean.class);
 			repository.findByRestaurantId(croneReview.getRestaurantId());
 			bean.setRestaurantId(croneReview.getRestaurantId());
 			bean.setReviewerRating(croneReview.getAverage());
-			repository.save(bean);*/
+			repository.save(bean);
 		}
-		
-		/*int restaurantId = 0;
+		int restaurantId = 0;
 		Iterator<RestaurantReviewBean> it = repository.findAll().iterator();
 		while(it.hasNext()) {
 			restaurantId = it.next().getRestaurantId();
 			
 		}
-		beanList = repository.findByRestaurantId(restaurantId);*/
+		beanList = repository.findByRestaurantId(restaurantId);
 		logger.info("--> cron job stopped");
-	}
+	}*/
 
 }

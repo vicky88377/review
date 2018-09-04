@@ -1,4 +1,4 @@
-package org.mindtree.practice.Hotel.Reviews;
+/*package org.mindtree.practice.Hotel.Reviews;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -50,8 +50,8 @@ public class HotelReviewsApplicationTests {
 	private List<CustomerRestaurantReview> expectedCustomerRestaurantReviewList;
 	private Iterator iterator;
 	
-	/*@MockBean
-	private RestaurantReviewService service;*/
+	@MockBean
+	private RestaurantReviewService service;
 	
 	@Autowired
 	private RestaurantReviewController controller;
@@ -92,9 +92,9 @@ public class HotelReviewsApplicationTests {
 		expectedPage = new PageImpl<>(expectedCustomerRestaurantReviewList, expectedPageable, expectedCustomerRestaurantReviewList.size());
 	}
 	
-	/*@Test
+	@Test
 	public void contextLoads() {
-	}*/
+	}
 	
 	@Test
 	public void testPositiveGetReviewsPaginated() {
@@ -102,7 +102,7 @@ public class HotelReviewsApplicationTests {
 		assertTrue(actualPage.getContent().iterator().next().getClass().isInstance(expectedCustomerRestaurantReview));
 		
 //		logger.info(actualPage.getContent().containsAll(expectedCustomerRestaurantReview) + "logging assert ======= ");
-		/*int pageNumber = (int) expectedCustomerRestaurantReviewList.size()/3;
+		int pageNumber = (int) expectedCustomerRestaurantReviewList.size()/3;
 		pageNumber++;
 		int i = 0;
 		while(i<pageNumber) {
@@ -126,26 +126,26 @@ public class HotelReviewsApplicationTests {
 				assertEquals(actual.geteMailId(), expected.geteMailId());
 			}
 			i++;
-		}*/
+		}
 		
-		/*logger.info("this is comparing objs " + actual.equals(expected));
-		assertEquals(actual, expected);*/
-		/*assertSame(expectedPage, actualPage);*/
+		logger.info("this is comparing objs " + actual.equals(expected));
+		assertEquals(actual, expected);
+		assertSame(expectedPage, actualPage);
 	}
 	
-	/*@Test
+	@Test
 	public void testNegativeGetReviewsPaginated() {
 		beanPage = service.getReviewsPaginated(pageable);
 		logger.info("size of pageable bean got : " + beanPage.getSize());
 		Assert.isInstanceOf(Page.class, beanPage, "Got Null in reviews with pagination function");
 		Assert.notNull(beanPage, "Got Null in reviews wit pagination function");
-	}*/
+	}
 	
-	/*@Test
+	@Test
 	public void testCronJob() {
 		Mockito.doReturn(null).when(service).cronJobAverageRating();
 		assertEquals(null, null);
-	}*/
+	}
 	
 	@Test
 	public void testCreateReviews() throws ExecutionException {
@@ -172,3 +172,4 @@ public class HotelReviewsApplicationTests {
 	}
 
 }
+*/

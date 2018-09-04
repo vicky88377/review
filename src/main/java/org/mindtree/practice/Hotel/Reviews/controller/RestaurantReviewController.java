@@ -1,7 +1,11 @@
 package org.mindtree.practice.Hotel.Reviews.controller;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 /*import javax.ws.rs.core.MediaType;*/
@@ -13,6 +17,8 @@ import org.mindtree.practice.Hotel.Reviews.beans.CustomerInfo;
 import org.mindtree.practice.Hotel.Reviews.beans.CustomerRestaurantReview;
 //import org.mindtree.practice.Hotel.Reviews.exceptions.InvalidRestaurantIdException;
 import org.mindtree.practice.Hotel.Reviews.services.RestaurantReviewService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +42,7 @@ import org.mindtree.practice.Hotel.Reviews.firebase.FireBaseAuthHelper;
 
 /*import com.google.common.net.MediaType;*/
 
-import ch.qos.logback.classic.Logger;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -47,11 +53,14 @@ import io.swagger.annotations.ApiResponses;
 @Api(value="Order My Food Application", description="Getting reviews : do mention page and size")
 public class RestaurantReviewController {
 	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private RestaurantReviewService service;
 	
 	private CustomerRestaurantReview bean;
 	private RestTemplate template;
+	private Properties reviewFile;
 	
 	private List<CustomerRestaurantReview> beanList;
 	private Page<CustomerRestaurantReview> beanPage;
@@ -96,38 +105,59 @@ public class RestaurantReviewController {
 	
 	@RequestMapping(value="/putReview", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CustomerRestaurantReview> putReviews(@RequestHeader(value="token") String firebaseAccessToken, @RequestBody RestaurantReview bean) throws ExecutionException {
-		template = new RestTemplate();
-		this.bean = new CustomerRestaurantReview();
-//		String customerName = template.getForObject("/customer/" + customerEmailId, String.class);
-		this.bean.setRestaurantId(bean.getRestaurantId());
-		this.bean.setReviewerRating(bean.getRestaurantRating());
-		this.bean.setRestaurantReview(bean.getRestaurantReview());
-		
-		this.bean.seteMailId("shetashree1993@gmail.com");
-		Map<String, String> userInfo;
-		try {
-			userInfo = FireBaseAuthHelper.getUserInfo1(firebaseAccessToken);
-			this.bean.seteMailId(userInfo.get("email"));
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("token", firebaseAccessToken);
-			HttpEntity<String> entity = new HttpEntity<String>(headers);
-			ResponseEntity<CustomerInfo> responseEntity = template.exchange("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/customers/customerDetails", HttpMethod.GET, entity, CustomerInfo.class);
-			this.bean.seteMailId(responseEntity.getBody().getEmail_id());
-			this.bean.setReviewerName(responseEntity.getBody().getCustomer_name());
-			this.bean = service.putReviews(this.bean);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		logger.info("token is : " + firebaseAccessToken);
+		if(FireBaseAuthHelper.isValidToken(firebaseAccessToken)){
+			template = new RestTemplate();
+			this.bean = new CustomerRestaurantReview();
+//			String customerName = template.getForObject("/customer/" + customerEmailId, String.class);
+			this.bean.setRestaurantId(bean.getRestaurantId());
+			this.bean.setReviewerRating(bean.getRestaurantRating());
+			this.bean.setRestaurantReview(bean.getRestaurantReview());
+			this.bean.seteMailId("shetashree1993@gmail.com");
+			Map<String, String> userInfo;
+			try {
+				userInfo = FireBaseAuthHelper.getUserInfo1(firebaseAccessToken);
+				this.bean.seteMailId(userInfo.get("email"));
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("AUTH-TOKEN", firebaseAccessToken);
+				HttpEntity<String> entity = new HttpEntity<String>(headers);
+				reviewFile = new Properties();
+				reviewFile.load(new FileInputStream("reviewConfig.properties"));
+				logger.info("customer url : " + reviewFile.getProperty("customerurl"));
+				ResponseEntity<CustomerInfo> responseEntity = template.exchange(reviewFile.getProperty("customerurl"), HttpMethod.GET, entity, CustomerInfo.class);
+				this.bean.seteMailId(responseEntity.getBody().getEmail_id());
+				this.bean.setReviewerName(responseEntity.getBody().getCustomer_name());
+				/*CustomerInfo responseEntity = template.getForObject(reviewFile.getProperty("customerurl"), CustomerInfo.class);
+				this.bean.seteMailId(responseEntity.getEmail_id());
+				this.bean.setReviewerName(responseEntity.getCustomer_name());*/
+				logger.info("got response from customer module :");
+				this.bean = service.putReviews(this.bean);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+//			http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/{resId}/reviews/{rating}
+//			String customerName = template.getForObject("https://172.23.22.1:9002/customers/customerName/" + this.bean.geteMailId(), String.class);
+			return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.FORBIDDEN);
 		}
-//		http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/{resId}/reviews/{rating}
-//		String customerName = template.getForObject("https://172.23.22.1:9002/customers/customerName/" + this.bean.geteMailId(), String.class);
-		return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/updateReview/{reviewId}", method=RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CustomerRestaurantReview> updateReviews(@PathVariable Integer reviewId, @RequestBody RestaurantReviewUpdates bean) {
-		this.bean = service.updateReviews(bean, reviewId);
-		return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
+	public ResponseEntity<CustomerRestaurantReview> updateReviews(@PathVariable Integer reviewId, @RequestHeader(value="token") String firebaseAccessToken, @RequestBody RestaurantReviewUpdates bean) {
+		if(FireBaseAuthHelper.isValidToken(firebaseAccessToken)){
+			this.bean = service.updateReviews(bean, reviewId);
+			return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.FORBIDDEN);
+		}
 	}
 	
 }
