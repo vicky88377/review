@@ -6,7 +6,6 @@
 
 	<groupId>org.mindtree.practice</groupId>
 	<artifactId>HotelReviews</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Hotel Reviews</name>
