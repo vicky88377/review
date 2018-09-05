@@ -17,6 +17,8 @@ import org.mindtree.practice.Hotel.Reviews.repository.RestaurantReviewRepository
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
@@ -32,12 +34,16 @@ import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.tasks.Task;
 
 @Service
+@PropertySource("classpath:reviewConfig.properties")
 public class RestaurantReviewService {
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private RestaurantReviewRepository repository;
+	
+	@Value("${restauranturl1}")
+    private String restauranturl1;
 	
 	private CustomerRestaurantReview bean;
 	private List<CustomerRestaurantReview> beanList;
@@ -114,7 +120,7 @@ public class RestaurantReviewService {
 		while(iterator.hasNext()) {
 			bean = iterator.next();
 //			template.exchange("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/" + bean.getRestaurantId() + "/reviews/" + bean.getRestaurantReview(), HttpMethod.PUT, null, RestaurantBean.class);
-			ResponseEntity<RestaurantBean> restaurantEntityBean = template.exchange(reviewFile.getProperty("restauranturl1") + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), HttpMethod.PUT, new HttpEntity<String>(new HttpHeaders()), RestaurantBean.class);
+			ResponseEntity<RestaurantBean> restaurantEntityBean = template.exchange(restauranturl1+ bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), HttpMethod.PUT, new HttpEntity<String>(new HttpHeaders()), RestaurantBean.class);
 			logger.info("cron log : Restaurant ID " + bean.getRestaurantId() + " and average rating is " + bean.getReviewerRating() + " result status : " + restaurantEntityBean.getBody().getStatus() + " and status code : " + restaurantEntityBean.getBody().getStatus_code());
 			/*RestaurantBean restaurantBean = template.getForObject("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), RestaurantBean.class);
 			repository.findByRestaurantId(croneReview.getRestaurantId());
