@@ -28,6 +28,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,7 +50,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("/api/ordermyfood")
+@RequestMapping("/api")
 @Api(value="Order My Food Application", description="Getting reviews : do mention page and size")
 public class RestaurantReviewController {
 	
@@ -64,6 +65,7 @@ public class RestaurantReviewController {
 	
 	private List<CustomerRestaurantReview> beanList;
 	private Page<CustomerRestaurantReview> beanPage;
+	private Map<String, String> userInfo;
 	
 	@ApiResponses(value= {
 			@ApiResponse(code=200, message="Successfully retrived"),
@@ -94,7 +96,7 @@ public class RestaurantReviewController {
 	}*/
 	
 	@ApiOperation(value="Getting Reviews of perticular Restaurant Paginated", response=CustomerRestaurantReview.class)
-	@RequestMapping(value="/getReviewsById/{restaurantId}/Paginated", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/Reviews/{restaurantId}/", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 //	@GetMapping("/getReviewsById/{restaurantId}/Paginated", produces=MediaType.)
 	public Page<CustomerRestaurantReview> getReviewsPaginated(@PathVariable Integer restaurantId, Pageable pageable) {
 		System.out.println(restaurantId + "integer restaurant id ===============================");
@@ -103,7 +105,7 @@ public class RestaurantReviewController {
 //		return (Page<RestaurantReviewBean>) new ResponseEntity<Page<RestaurantReviewBean>>(beanPage, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/putReview", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/Review", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CustomerRestaurantReview> putReviews(@RequestHeader(value="token") String firebaseAccessToken, @RequestBody RestaurantReview bean) throws ExecutionException {
 		logger.info("token is : " + firebaseAccessToken);
 		if(FireBaseAuthHelper.isValidToken(firebaseAccessToken)){
@@ -114,7 +116,6 @@ public class RestaurantReviewController {
 			this.bean.setReviewerRating(bean.getRestaurantRating());
 			this.bean.setRestaurantReview(bean.getRestaurantReview());
 			this.bean.seteMailId("shetashree1993@gmail.com");
-			Map<String, String> userInfo;
 			try {
 				userInfo = FireBaseAuthHelper.getUserInfo1(firebaseAccessToken);
 				this.bean.seteMailId(userInfo.get("email"));
@@ -144,20 +145,39 @@ public class RestaurantReviewController {
 			}
 //			http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/{resId}/reviews/{rating}
 //			String customerName = template.getForObject("https://172.23.22.1:9002/customers/customerName/" + this.bean.geteMailId(), String.class);
-			return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
+			return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.CREATED);
 		}else {
 			return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.FORBIDDEN);
 		}
 	}
 	
-	@RequestMapping(value="/updateReview/{reviewId}", method=RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/Review/{reviewId}", method=RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CustomerRestaurantReview> updateReviews(@PathVariable Integer reviewId, @RequestHeader(value="token") String firebaseAccessToken, @RequestBody RestaurantReviewUpdates bean) {
 		if(FireBaseAuthHelper.isValidToken(firebaseAccessToken)){
-			this.bean = service.updateReviews(bean, reviewId);
-			return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
+			try {
+				userInfo = FireBaseAuthHelper.getUserInfo1(firebaseAccessToken);
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			logger.info(" ================================ after auth ================================ ");
+			logger.info(service.getReviewEMailId(reviewId));
+			logger.info(userInfo.get("email"));
+			if(service.getReviewEMailId(reviewId).equals(userInfo.get("email"))) {
+				logger.info(" ================================ after auth condition ================================ ");
+				this.bean = service.updateReviews(bean, reviewId);
+				return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.FORBIDDEN);
+			}
 		} else {
 			return new ResponseEntity<CustomerRestaurantReview>(this.bean, HttpStatus.FORBIDDEN);
 		}
 	}
 	
+	@Scheduled(initialDelay=5000, fixedDelay=100000)
+	public boolean cronJobAverageRating() {
+		return service.cronJobAverageRating();
+	}
 }

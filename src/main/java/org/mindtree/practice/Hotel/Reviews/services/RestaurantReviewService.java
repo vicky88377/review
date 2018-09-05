@@ -78,10 +78,7 @@ public class RestaurantReviewService {
 		return this.bean;
 	}
 	
-	public CustomerRestaurantReview updateReviews(RestaurantReviewUpdates updateBean, Integer reviewId) {
-		/*if(isValidToken(firebaseAccessToken)) {
-			
-		}*/
+	public CustomerRestaurantReview updateReviews(RestaurantReviewUpdates updateBean, Integer reviewId) {		
 		CustomerRestaurantReview updatedBean;
 		logger.info("reviewer ====================================== " + reviewId);
 		updatedBean = repository.findById(reviewId).get();
@@ -93,14 +90,18 @@ public class RestaurantReviewService {
 		return this.bean;
 	} 
 	
-	/*@Scheduled(initialDelay=5000, fixedDelay=200000)
-	public void cronJobAverageRating() {
+	public String getReviewEMailId(Integer reviewId) {
+		return repository.findById(reviewId).get().geteMailId();
+	}
+	
+	public boolean cronJobAverageRating() {
+		boolean status = true;
 		logger.info("--> cron job running");
 		RestTemplate template = new RestTemplate();
-		RestaurantBean restaurantBean;
+		/*RestaurantBean restaurantBean;
 		repository.doTheCronJob();
 		beanList = repository.runCronJob();
-		logger.info(beanList.toString());
+		logger.info(beanList.toString());*/
 		try {
 			reviewFile = new Properties();
 			reviewFile.load(new FileInputStream("reviewConfig.properties"));
@@ -115,20 +116,24 @@ public class RestaurantReviewService {
 //			template.exchange("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/" + bean.getRestaurantId() + "/reviews/" + bean.getRestaurantReview(), HttpMethod.PUT, null, RestaurantBean.class);
 			ResponseEntity<RestaurantBean> restaurantEntityBean = template.exchange(reviewFile.getProperty("restauranturl1") + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), HttpMethod.PUT, new HttpEntity<String>(new HttpHeaders()), RestaurantBean.class);
 			logger.info("cron log : Restaurant ID " + bean.getRestaurantId() + " and average rating is " + bean.getReviewerRating() + " result status : " + restaurantEntityBean.getBody().getStatus() + " and status code : " + restaurantEntityBean.getBody().getStatus_code());
-			RestaurantBean restaurantBean = template.getForObject("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), RestaurantBean.class);
+			/*RestaurantBean restaurantBean = template.getForObject("http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/" + bean.getRestaurantId() + "/reviews/" + bean.getReviewerRating(), RestaurantBean.class);
 			repository.findByRestaurantId(croneReview.getRestaurantId());
 			bean.setRestaurantId(croneReview.getRestaurantId());
-			bean.setReviewerRating(croneReview.getAverage());
+			bean.setReviewerRating(croneReview.getAverage());*/
 			repository.save(bean);
+			if(restaurantEntityBean.getBody().getStatus_code() != 200) {
+				status = false;
+			}
 		}
-		int restaurantId = 0;
+		/*int restaurantId = 0;
 		Iterator<RestaurantReviewBean> it = repository.findAll().iterator();
 		while(it.hasNext()) {
 			restaurantId = it.next().getRestaurantId();
 			
 		}
-		beanList = repository.findByRestaurantId(restaurantId);
+		beanList = repository.findByRestaurantId(restaurantId);*/
 		logger.info("--> cron job stopped");
-	}*/
+		return status;
+	}
 
 }
