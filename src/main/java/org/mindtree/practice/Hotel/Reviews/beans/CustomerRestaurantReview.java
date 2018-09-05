@@ -1,15 +1,20 @@
 package org.mindtree.practice.Hotel.Reviews.beans;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 
 @Entity
-@Table(name="restaurant_review")
+@Table(name="restaurant_reviews")
 public class CustomerRestaurantReview {
 	
 	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment", strategy = "increment") 
 	private int reviewId;
 	
 	private int restaurantId;
