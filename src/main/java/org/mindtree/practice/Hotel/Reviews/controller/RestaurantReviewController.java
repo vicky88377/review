@@ -121,21 +121,23 @@ public class RestaurantReviewController {
 	}
 	
 	@RequestMapping(value="/review", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CustomerRestaurantReview> putReviews(@RequestHeader(value="token") String firebaseAccessToken, @RequestBody RestaurantReview bean) {
+	public ResponseEntity<CustomerRestaurantReview> putReviews(@RequestHeader(value="Authorization") String firebaseAccessToken, @RequestBody RestaurantReview bean) {
 		logger.info("token is : " + firebaseAccessToken);
-		if(FireBaseAuthHelper.isValidToken(firebaseAccessToken)){
+		FireBaseAuthHelper instance = FireBaseAuthHelper.getInstace();
+		firebaseAccessToken.replaceAll("Bearer ", "");
+		if(instance.isValidToken(firebaseAccessToken)){
 			template = new RestTemplate();
 			this.bean = new CustomerRestaurantReview();
 //			String customerName = template.getForObject("/customer/" + customerEmailId, String.class);
 			this.bean.setRestaurantId(bean.getRestaurantId());
 			this.bean.setReviewerRating(bean.getRestaurantRating());
 			this.bean.setRestaurantReview(bean.getRestaurantReview());
-			this.bean.seteMailId("shetashree1993@gmail.com");
+			this.bean.seteMailId("shwetashree1993@gmail.com");
 			try {
-				userInfo = FireBaseAuthHelper.getUserInfo1(firebaseAccessToken);
+				userInfo = instance.getUserInfo1(firebaseAccessToken);
 				this.bean.seteMailId(userInfo.get("email"));
 				HttpHeaders headers = new HttpHeaders();
-				headers.add("AUTH-TOKEN", firebaseAccessToken);
+				headers.add("Authorization", firebaseAccessToken);
 				HttpEntity<String> entity = new HttpEntity<String>(headers);
 				reviewFile = new Properties();
 				reviewFile.load(new FileInputStream("reviewConfig.properties"));
@@ -174,10 +176,12 @@ public class RestaurantReviewController {
 	}
 	
 	@RequestMapping(value="/review/{reviewId}", method=RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CustomerRestaurantReview> updateReviews(@PathVariable Integer reviewId, @RequestHeader(value="token") String firebaseAccessToken, @RequestBody RestaurantReviewUpdates bean) {
-		if(FireBaseAuthHelper.isValidToken(firebaseAccessToken)){
+	public ResponseEntity<CustomerRestaurantReview> updateReviews(@PathVariable Integer reviewId, @RequestHeader(value="Authorization") String firebaseAccessToken, @RequestBody RestaurantReviewUpdates bean) {
+		FireBaseAuthHelper instance = FireBaseAuthHelper.getInstace();
+		firebaseAccessToken.replaceAll("Bearer ", "");
+		if(instance.isValidToken(firebaseAccessToken)){
 			try {
-				userInfo = FireBaseAuthHelper.getUserInfo1(firebaseAccessToken);
+				userInfo = instance.getUserInfo1(firebaseAccessToken);
 			} catch (InterruptedException | ExecutionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
