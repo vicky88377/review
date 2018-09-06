@@ -159,6 +159,6 @@ public class RestaurantReviewController {
 //	@RequestMapping(value="/review/cron", method=RequestMethod.GET)
 	@Scheduled(initialDelay=5000, fixedDelay=100000)
 	public boolean cronJobAverageRating() {
-		return service.cronJobAverageRating();
+	return service.cronJobAverageRating();
 	}
 }
